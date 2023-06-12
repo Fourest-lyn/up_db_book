@@ -39,18 +39,18 @@ class DBClient:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS stores (
-                    store_id SERIAL PRIMARY KEY
-                    user_id INT
+                    store_id text PRIMARY KEY
+                    user_id text
                 )
                 """
             )
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS book_list(
-                    store_id INT REFERENCES stores(store_id),
-                    book_id INT
-                    book_info_id INT
-                    stock_level INT
+                    store_id text REFERENCES stores(store_id),
+                    book_id text
+                    book_info_id text
+                    stock_level int
                 )
                 """
             )
@@ -58,14 +58,15 @@ class DBClient:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS book_info (
-                    book_id SERIAL PRIMARY KEY
+                    book_info_id serial PRIMARY KEY
                 )
                 """
             )
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS book_tags (
-                    book_id SERIAL PRIMARY KEY
+                    book_info_id text PRIMARY KEY
+                    tag text
                 )
                 """
             )
@@ -120,10 +121,9 @@ class DBClient:
 
     def database_close(self) -> None:
         self.client.close()
-
+"""
 
 database_instance: Optional[DBClient] = None
-"""
 
 
 def db_init() -> None:
@@ -136,3 +136,12 @@ def get_db_conn() -> DBClient:
     global database_instance
     assert database_instance is not None, "Database not initialized"
     return database_instance
+
+
+db_column_list = {
+    "users": ("user_id",),
+    "stores": ("store_id", "user_id"),
+    "book_list": ("store_id", "book_id", "book_info_id", "stock_level"),
+    "book_tags": ("book_info_id",),
+    "new_order": ("order_id",),
+}

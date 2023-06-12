@@ -39,3 +39,5 @@ class BookInfoTemp:
     #   content: str
     #   tags: List[str]
     #   pictures: List[str]
+
+    # The value: picture maybe not exist.

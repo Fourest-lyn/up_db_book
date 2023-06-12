@@ -10,8 +10,9 @@ from ...template.new_order_template import STATUS
 
 class NewOrderInterface:
     def __init__(self, conn: DBClient):
-        self.conn=conn
-        self.cur=self.conn.cursor()
+        self.conn = conn.conn
+        self.cur = self.conn.cursor()
+        self.dcur = self.conn.cursor()
         self.newOrderCol: Collection = conn.newOrderCol
 
     def insert_new_order(self, new_order: NewOrderTemp):
