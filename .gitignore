@@ -1,0 +1,16 @@
+.DS_Store
+src/__pycache__
+.mypy_cache
+.DS_Store
+.vscode
+log.txt
+.pytest_cache
+__pycache__
+*/__pycache__
+*/*/__pycache__
+.coverage
+build
+bookstore.egg-info
+be/*_model
+fe/data/book_*.db
+*.log

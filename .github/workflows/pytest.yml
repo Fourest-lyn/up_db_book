@@ -1,0 +1,29 @@
+name: pytest
+
+on: [push, pull_request]
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash  
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.9
+          architecture: x64
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Launch MongoDB
+        run: |
+          sudo docker container run --name mongo -p 27017:27017 -d mongo
+          sleep 4s       
+      - name: Run test
+        run: pytest .
+        timeout-minutes: 5
