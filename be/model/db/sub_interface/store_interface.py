@@ -14,8 +14,8 @@ class StoreInterface:
         self.conn: connection = conn.conn
         self.cur = self.conn.cursor()
         self.dcur = self.conn.cursor(cursor_factory=DictCursor)
-        self.storeCol: Collection = conn.storeCol
-        self.bookInfoCol: Collection = conn.bookInfoCol
+        # self.storeCol: Collection = conn.storeCol
+        # self.bookInfoCol: Collection = conn.bookInfoCol
 
     def __del__(self):
         self.cur.close()
@@ -117,7 +117,8 @@ class StoreInterface:
     ) -> None:
         new_book_info = BookInfoTemp(book_info, store_id)
         # add into book_info
-        book_dict: dict = new_book_info.to_dict().pop("tags", None)
+        book_dict: dict = new_book_info.to_dict()
+        book_dict.pop("tags", None)
         columns = ", ".join(book_dict.keys())
         values = ", ".join([f"'{value}'" for value in book_dict.values()])
         self.cur.execute(f"insert into book_info ({columns}) values ({values})")

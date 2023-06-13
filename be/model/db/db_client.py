@@ -47,14 +47,13 @@ class DBClient:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS book_list(
-                    store_id text REFERENCES stores(store_id),
+                    store_id text 
                     book_id text
                     book_info_id text
                     stock_level int
                 )
                 """
             )
-            # todo: 完成book_info和book_tags的表格构建
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS book_info (
@@ -70,10 +69,25 @@ class DBClient:
                 )
                 """
             )
+            # there is book list in order_id, but we temporarily ignore it
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS new_order (
-                    order_id SERIAL PRIMARY KEY
+                    order_id text PRIMARY KEY
+                    user_id text 
+                    store_id text
+                    create_time int
+                    status int
+                )
+                """
+            )
+            cursor.execute(
+                """
+                CREATE TABLE IF NOT EXISTS order_book (
+                    order_id text 
+                    book_id text
+                    count int
+                    price int
                 )
                 """
             )
@@ -83,8 +97,11 @@ class DBClient:
         with self.conn.cursor() as cursor:
             cursor.execute("DROP TABLE IF EXISTS users")
             cursor.execute("DROP TABLE IF EXISTS stores")
+            cursor.execute("DROP TABLE IF EXISTS book_list")
             cursor.execute("DROP TABLE IF EXISTS book_info")
+            cursor.execute("DROP TABLE IF EXISTS book_tags")
             cursor.execute("DROP TABLE IF EXISTS new_order")
+            cursor.execute("DROP TABLE IF EXISTS order_book")
         self.conn.commit()
         self.database_init()
 
@@ -143,5 +160,6 @@ db_column_list = {
     "stores": ("store_id", "user_id"),
     "book_list": ("store_id", "book_id", "book_info_id", "stock_level"),
     "book_tags": ("book_info_id",),
-    "new_order": ("order_id",),
+    "new_order": ("order_id", "user_id", "store_id", "create_time", "status"),
+    "order_book": ("order_id", "book_id", "count", "price"),
 }
