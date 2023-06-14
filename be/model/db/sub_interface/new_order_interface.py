@@ -1,5 +1,6 @@
 from ..db_client import DBClient, db_column_list
-from pymongo.collection import Collection
+
+# from pymongo.collection import Collection
 import psycopg2
 from psycopg2.extensions import connection
 from psycopg2.extras import DictCursor
@@ -13,7 +14,7 @@ class NewOrderInterface:
         self.conn = conn.conn
         self.cur = self.conn.cursor()
         self.dcur = self.conn.cursor(cursor_factory=DictCursor)
-        self.newOrderCol: Collection = conn.newOrderCol
+        # self.newOrderCol: Collection = conn.newOrderCol
 
     def insert_new_order(self, new_order: NewOrderTemp):
         # insert into new_order

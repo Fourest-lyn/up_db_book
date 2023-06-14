@@ -29,10 +29,15 @@ class DBClient:
 
     def database_init(self) -> None:
         with self.conn.cursor() as cursor:
+            # user's order can be find in the table "new_order", so we don't save order_list in "users"
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS users (
                     user_id SERIAL PRIMARY KEY
+                    password text
+                    balance int
+                    token text
+                    terminal text
                 )
                 """
             )
@@ -156,7 +161,7 @@ def get_db_conn() -> DBClient:
 
 
 db_column_list = {
-    "users": ("user_id",),
+    "users": ("user_id", "password", "balance", "token", "terminal"),
     "stores": ("store_id", "user_id"),
     "book_list": ("store_id", "book_id", "book_info_id", "stock_level"),
     "book_tags": ("book_info_id",),

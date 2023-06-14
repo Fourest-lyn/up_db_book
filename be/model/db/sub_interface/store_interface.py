@@ -24,11 +24,11 @@ class StoreInterface:
     def book_id_exist(self, store_id, book_id) -> bool:
         # cursor = self.storeCol.find_one({"store_id": store_id, "book_list.book_id": book_id})
         self.cur.execute(
-            "SELECT EXISTS(SELECT 1 FROM book_list WHERE store_id = %s AND book_id = %s",
+            "select * from book_list where store_id = %s and book_id = %s",
             (store_id, book_id),
         )
-        result = self.cur.fetchone()[0]
-        return result
+        result = self.cur.fetchone()
+        return result is not None
 
     def store_id_exist(self, store_id) -> bool:
         # cursor = self.storeCol.find_one({"store_id": store_id})
@@ -104,7 +104,7 @@ class StoreInterface:
         """
 
     def get_store_seller_id(self, store_id: str) -> Optional[str]:
-        self.cur.execute("SELECT userid FROM stores WHERE storeid = %s", (store_id,))
+        self.cur.execute("SELECT userid FROM stores WHERE store_id = %s", (store_id,))
         result = self.cur.fetchone()
         # result = self.storeCol.find_one({"store_id": store_id}, {"_id": 0, "user_id": 1})
         if result is None:
