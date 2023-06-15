@@ -25,7 +25,7 @@ class NewOrderInterface:
         self.cur.execute(f"insert into new_order ({index}) values ({values})")
 
         # insert into order_book
-        index: str = ",".join(db_column_list["order_book"])
+        index = ",".join(db_column_list["order_book"])
         order_id = new_order.order_id
         for bk in new_order.book_list:
             self.cur.execute(
@@ -106,7 +106,7 @@ class NewOrderInterface:
         # result = self.newOrderCol.update_one(
         #     {"order_id": order_id}, {"$set": {"status": status.value}}
         # )
-        return status
+        return status.value
 
     def find_order_status(self, order_id: str) -> Optional[STATUS]:
         self.cur.execute(f"select status from new_order where order_id = '{order_id}'")

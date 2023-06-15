@@ -14,9 +14,9 @@ class DBClient:
         self,
         host="localhost",
         port=5432,
-        user="postgres",
+        user="master",
         password="",
-        database="bookstore",
+        database="postgres",
     ):
         self.host: str = host
         self.port: int = port
@@ -33,10 +33,10 @@ class DBClient:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS users (
-                    user_id SERIAL PRIMARY KEY
-                    password text
-                    balance int
-                    token text
+                    user_id SERIAL PRIMARY KEY,
+                    password text,
+                    balance int,
+                    token text,
                     terminal text
                 )
                 """
@@ -44,7 +44,7 @@ class DBClient:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS stores (
-                    store_id text PRIMARY KEY
+                    store_id text PRIMARY KEY,
                     user_id text
                 )
                 """
@@ -52,9 +52,9 @@ class DBClient:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS book_list(
-                    store_id text 
-                    book_id text
-                    book_info_id text
+                    store_id text ,
+                    book_id text,
+                    book_info_id text,
                     stock_level int
                 )
                 """
@@ -62,14 +62,30 @@ class DBClient:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS book_info (
-                    book_info_id serial PRIMARY KEY
+                    book_info_id serial PRIMARY KEY,
+                    book_id text,
+                    id text,
+                    title text,
+                    author text,
+                    pulisher text,
+                    original_title text,
+                    translator text,
+                    pub_year text,
+                    pages int,
+                    price int,
+                    currency_unit int,
+                    binding text,
+                    isbn text,
+                    author_intro text,
+                    book_intro text,
+                    content text
                 )
                 """
             )
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS book_tags (
-                    book_info_id text PRIMARY KEY
+                    book_info_id text PRIMARY KEY,
                     tag text
                 )
                 """
@@ -78,10 +94,10 @@ class DBClient:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS new_order (
-                    order_id text PRIMARY KEY
-                    user_id text 
-                    store_id text
-                    create_time int
+                    order_id text PRIMARY KEY,
+                    user_id text ,
+                    store_id text,
+                    create_time int,
                     status int
                 )
                 """
@@ -89,9 +105,9 @@ class DBClient:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS order_book (
-                    order_id text 
-                    book_id text
-                    count int
+                    order_id text ,
+                    book_id text,
+                    count int,
                     price int
                 )
                 """
@@ -114,7 +130,7 @@ class DBClient:
         self.conn.close()
 
 
-database_instance: Optional[DBClient] = None
+# database_instance: Optional[DBClient] = None
 
 
 """
@@ -164,6 +180,7 @@ db_column_list = {
     "users": ("user_id", "password", "balance", "token", "terminal"),
     "stores": ("store_id", "user_id"),
     "book_list": ("store_id", "book_id", "book_info_id", "stock_level"),
+    "book_info": ("book_info_id",),  # maybe we need not use this line
     "book_tags": ("book_info_id",),
     "new_order": ("order_id", "user_id", "store_id", "create_time", "status"),
     "order_book": ("order_id", "book_id", "count", "price"),

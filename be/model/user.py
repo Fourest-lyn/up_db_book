@@ -51,7 +51,7 @@ class User:
                 now = time.time()
                 if self.token_lifetime > now - ts >= 0:
                     return True
-            return False  # TODO: check this Loc is right
+            return False  # : check this Loc is right
         except jwt.exceptions.InvalidSignatureError as e:
             logging.error(str(e))
             return False

@@ -133,7 +133,7 @@ class StoreInterface:
         )
 
         # add into book_tags
-        data = [(book_info_id, tg) for tg in new_book_info.to_dict["tags"]]
+        data = [(book_info_id, tg) for tg in new_book_info.to_dict()["tags"]]
         sql = "insert into book_tags (book_id, tag) values (%s, %s)"
         self.cur.executemany(sql, data)
 
@@ -157,7 +157,7 @@ class StoreInterface:
         )
 
         # add into book_list
-        index: str = ",".join(db_column_list["book_list"])
+        index = ",".join(db_column_list["book_list"])
         for bk in new_store.book_list:
             self.cur.execute(
                 f"insert into book_list ({index}) values ('{store_id}','{bk.book_id}','{bk.book_info_id}','{bk.stock_level}')"
