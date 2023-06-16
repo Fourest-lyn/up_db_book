@@ -67,6 +67,7 @@ class Buyer:
             logging.info("528, {}".format(str(e)))
             return 528, "{}".format(str(e)), ""
         except BaseException as e:
+            print("debug here\n")
             logging.info("530, {}".format(str(e)))
             print("530, {}".format(str(e)))
             return 530, "{}".format(str(e)), ""
@@ -135,6 +136,7 @@ class Buyer:
             return 528, "{}".format(str(e))
 
         except BaseException as e:
+            print("debug here2\n")
             return 530, "{}".format(str(e))
 
         return 200, "ok"
@@ -155,6 +157,7 @@ class Buyer:
         except PyMongoError as e:
             return 528, "{}".format(str(e))
         except BaseException as e:
+            print("debug here3\n")
             return 530, "{}".format(str(e))
 
         return 200, "ok"
@@ -187,6 +190,7 @@ class Buyer:
             return 528, "{}".format(str(e))
 
         except BaseException as e:
+            print("debug here4\n")
             return 530, "{}".format(str(e))
 
         return 200, "ok"
@@ -203,6 +207,7 @@ class Buyer:
         except PyMongoError as e:
             return 528, "{}".format(str(e)), {}
         except BaseException as e:
+            print("debug here5\n")
             return 530, "{}".format(str(e)), {}
         return 200, "ok", match_order.to_dict()
 
@@ -222,6 +227,7 @@ class Buyer:
         except PyMongoError as e:
             return 528, "{}".format(str(e)), []
         except BaseException as e:
+            print("debug here6\n")
             return 530, "{}".format(str(e)), []
         return 200, "ok", order_list
 
@@ -261,6 +267,7 @@ class Buyer:
         except PyMongoError as e:
             return 528, "{}".format(str(e))
         except BaseException as e:
+            print("debug here7\n")
             return 530, "{}".format(str(e))
 
         return 200, "ok"

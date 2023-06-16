@@ -7,6 +7,7 @@ from ...template.store_template import StoreBookTmp, StoreTemp
 from ... import error
 from typing import List, Dict, Any, Optional
 from ...template.book_info import BookInfoTemp
+from copy import deepcopy
 
 
 class StoreInterface:
@@ -117,11 +118,15 @@ class StoreInterface:
     ) -> None:
         new_book_info = BookInfoTemp(book_info, store_id)
         # add into book_info
-        book_dict: dict = new_book_info.to_dict()
+        book_dict: dict = deepcopy(new_book_info.to_dict())
+        book_dict.pop("pictures",None)
         book_dict.pop("tags", None)
+        book_dict.pop("store_id",None)
         columns = ", ".join(book_dict.keys())
         values = ", ".join([f"'{value}'" for value in book_dict.values()])
-        self.cur.execute(f"insert into book_info ({columns}) values ({values})")
+        sql = f"insert into book_info ({columns}) values ({values}) returning book_info_id"
+        # print("debug insert_one_book, sql=",sql,"\n")
+        self.cur.execute(sql)
 
         # get book_info_id
         book_info_id = self.cur.fetchone()[0]
@@ -134,7 +139,7 @@ class StoreInterface:
 
         # add into book_tags
         data = [(book_info_id, tg) for tg in new_book_info.to_dict()["tags"]]
-        sql = "insert into book_tags (book_id, tag) values (%s, %s)"
+        sql = "insert into book_tags (book_info_id, tag) values (%s, %s)"
         self.cur.executemany(sql, data)
 
         self.conn.commit()

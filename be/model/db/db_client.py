@@ -26,6 +26,7 @@ class DBClient:
         self.conn: connection = psycopg2.connect(
             host=host, port=port, user=user, password=password, database=database
         )
+    
 
     def database_init(self) -> None:
         with self.conn.cursor() as cursor:
@@ -33,7 +34,7 @@ class DBClient:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS users (
-                    user_id SERIAL PRIMARY KEY,
+                    user_id text unique,
                     password text,
                     balance int,
                     token text,
@@ -52,7 +53,7 @@ class DBClient:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS book_list(
-                    store_id text ,
+                    store_id text,
                     book_id text,
                     book_info_id text,
                     stock_level int
@@ -67,13 +68,13 @@ class DBClient:
                     id text,
                     title text,
                     author text,
-                    pulisher text,
+                    publisher text,
                     original_title text,
                     translator text,
                     pub_year text,
                     pages int,
                     price int,
-                    currency_unit int,
+                    currency_unit text,
                     binding text,
                     isbn text,
                     author_intro text,
@@ -85,7 +86,7 @@ class DBClient:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS book_tags (
-                    book_info_id text PRIMARY KEY,
+                    book_info_id text,
                     tag text
                 )
                 """
@@ -181,7 +182,7 @@ db_column_list = {
     "stores": ("store_id", "user_id"),
     "book_list": ("store_id", "book_id", "book_info_id", "stock_level"),
     "book_info": ("book_info_id",),  # maybe we need not use this line
-    "book_tags": ("book_info_id",),
+    "book_tags": ("book_info_id","tag"),
     "new_order": ("order_id", "user_id", "store_id", "create_time", "status"),
     "order_book": ("order_id", "book_id", "count", "price"),
 }

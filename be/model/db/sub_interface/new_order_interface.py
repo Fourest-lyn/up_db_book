@@ -29,7 +29,7 @@ class NewOrderInterface:
         order_id = new_order.order_id
         for bk in new_order.book_list:
             self.cur.execute(
-                f"insert into new_order ({index}) values ('{order_id}','{bk.book_id}','{bk.count}','{bk.price}')"
+                f"insert into order_book ({index}) values ('{order_id}','{bk.book_id}','{bk.count}','{bk.price}')"
             )
 
         self.conn.commit()

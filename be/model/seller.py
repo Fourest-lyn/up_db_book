@@ -35,6 +35,7 @@ class Seller:
         except PyMongoError as e:
             return 528, "{}".format(str(e))
         except BaseException as e:
+            print("debug here8\n")
             return 530, "{}".format(str(e))
         return 200, "ok"
 
@@ -55,6 +56,7 @@ class Seller:
         except PyMongoError as e:
             return 528, "{}".format(str(e))
         except BaseException as e:
+            print("debug here9\n")
             return 530, "{}".format(str(e))
         return 200, "ok"
 
@@ -70,6 +72,7 @@ class Seller:
         except PyMongoError as e:
             return 528, "{}".format(str(e))
         except BaseException as e:
+            print("debug here10\n")
             return 530, "{}".format(str(e))
         return 200, "ok"
 
@@ -91,6 +94,7 @@ class Seller:
         except PyMongoError as e:
             return 528, "{}".format(str(e)), -1
         except BaseException as e:
+            print("debug here11\n")
             return 530, "{}".format(str(e)), -1
         return 200, "ok", stock_level
 
@@ -111,6 +115,7 @@ class Seller:
         except PyMongoError as e:
             return 528, "{}".format(str(e))
         except BaseException as e:
+            print("debug here12\n")
             return 530, "{}".format(str(e))
         return 200, "ok"
 
@@ -132,6 +137,7 @@ class Seller:
         except PyMongoError as e:
             return 528, "{}".format(str(e)), []
         except BaseException as e:
+            print("debug here13\n")
             return 530, "{}".format(str(e)), []
 
         return 200, "ok", canceled_order_id_list

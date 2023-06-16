@@ -14,3 +14,4 @@ bookstore.egg-info
 be/*_model
 fe/data/book_*.db
 *.log
+clear.py

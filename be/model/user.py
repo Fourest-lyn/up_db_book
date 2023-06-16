@@ -106,6 +106,7 @@ class User:
         except PyMongoError as e:
             return 528, "{}".format(str(e)), ""
         except BaseException as e:
+            print("debug here14\n")
             return 530, "{}".format(str(e)), ""
         return 200, "ok", token
 
@@ -127,6 +128,7 @@ class User:
         except PyMongoError as e:
             return 528, "{}".format(str(e))
         except BaseException as e:
+            print("debug here15\n")
             return 530, "{}".format(str(e))
         return 200, "ok"
 
@@ -142,6 +144,7 @@ class User:
         except PyMongoError as e:
             return 528, "{}".format(str(e))
         except BaseException as e:
+            print("debug here16\n")
             return 530, "{}".format(str(e))
         return 200, "ok"
 
@@ -167,5 +170,6 @@ class User:
         except PyMongoError as e:
             return 528, "{}".format(str(e))
         except BaseException as e:
+            print("debug here17\n")
             return 530, "{}".format(str(e))
         return 200, "ok"

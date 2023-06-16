@@ -6,6 +6,9 @@ from pymongo.collection import Collection
 from ...template.user_template import UserTemp
 from typing import Optional, List
 
+from psycopg2.errors import UniqueViolation
+from pymongo.errors import DuplicateKeyError
+
 
 class UserInterface:
     def __init__(self, conn: DBClient):
@@ -72,7 +75,12 @@ class UserInterface:
         user_dict.pop("order_id_list", None)
         columns = ", ".join(user_dict.keys())
         values = ", ".join([f"'{value}'" for value in user_dict.values()])
-        self.cur.execute(f"insert into users ({columns}) values ({values})")
+        try:
+            sql = f"insert into users ({columns}) values ({values})"
+        except UniqueViolation:
+            raise DuplicateKeyError("users already exist!")
+
+        self.cur.execute(sql)
         # self.userCol.insert_one(user.to_dict())
 
     def update_token_terminal(self, user_id: str, token: str, terminal: str) -> int:
