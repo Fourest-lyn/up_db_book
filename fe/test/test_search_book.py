@@ -22,7 +22,6 @@ class TestSearchBook:
         self.seller_id = "test_add_books_seller_id_{}".format(str(uuid.uuid1()))
         self.password = ""
         self.seller = register_new_seller(self.seller_id, self.password)
-
         # seller process
         self.store_number = 5
         # self.store_list: List[Seller] = []

@@ -77,10 +77,11 @@ class UserInterface:
         values = ", ".join([f"'{value}'" for value in user_dict.values()])
         try:
             sql = f"insert into users ({columns}) values ({values})"
+            self.cur.execute(sql)
         except UniqueViolation:
             raise DuplicateKeyError("users already exist!")
 
-        self.cur.execute(sql)
+        
         # self.userCol.insert_one(user.to_dict())
 
     def update_token_terminal(self, user_id: str, token: str, terminal: str) -> int:
@@ -144,7 +145,7 @@ class UserInterface:
 
     def get_order_list(self, user_id: str) -> Optional[List[str]]:
         self.cur.execute(
-            "select order_id from new_order where user_id = %s", (user_id,)
+            "select order_id from new_order where user_id = %s order by create_time", (user_id,)
         )
         result = self.cur.fetchall()
         if result is None:

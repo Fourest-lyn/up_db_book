@@ -43,9 +43,7 @@ class SearcherInterface:
             sql = f"""
                 select * 
                 from book_info
-                join book_list 
-                on book_info.book_info_id=book_list.book_info_id
-                where book_info.{dict_name}= %s and book_list.store_id = %s
+                where {dict_name}= %s and store_id = %s
                 """
             self.cur.execute(sql, (value, store_id))
             result = len(self.cur.fetchall())
@@ -82,15 +80,13 @@ class SearcherInterface:
         offset = st - 1
         select_columns = ", ".join(return_dict)
         if store_id is None:
-            query = f"SELECT {select_columns} FROM book_info WHERE {dict_name} = %s LIMIT %s OFFSET %s"
-            self.cur.execute(query, (value, limit, offset))
+            sql = f"SELECT {select_columns} FROM book_info WHERE {dict_name} = %s LIMIT %s OFFSET %s"
+            self.cur.execute(sql, (value, limit, offset))
         else:
             query = f"""
                 SELECT {select_columns}
                 FROM book_info
-                JOIN book_list
-                ON book_info.book_info_id = book_list.book_info_id
-                WHERE book_info.{dict_name} = %s AND book_list.store_id = %s
+                WHERE {dict_name} = %s AND store_id = %s
                 LIMIT %s OFFSET %s
             """
             self.cur.execute(query, (value, store_id, limit, offset))
@@ -118,20 +114,19 @@ class SearcherInterface:
     def find_book_with_content_n(
         self, content_piece: str, store_id: Optional[str] = None
     ) -> int:
+        content_use= f"%{content_piece}%"
         if store_id is None:
             self.cur.execute(
-                f"select * from book_info where content like %s", (content_piece,)
+                f"select * from book_info where content like %s", (content_use,)
             )
             result = len(self.cur.fetchall())
         else:
             sql = f"""
                 select * 
                 from book_info
-                join book_list 
-                on book_info.book_info_id=book_list.book_info_id
-                where book_info.content like %s and book_list.store_id = %s
+                where content like %s and store_id = %s
                 """
-            self.cur.execute(sql, (content_piece, store_id))
+            self.cur.execute(sql, (content_use, store_id))
             result = len(self.cur.fetchall())
         return result
 
@@ -160,20 +155,18 @@ class SearcherInterface:
         limit = ed - st + 1
         offset = st - 1
         select_columns = ", ".join(return_dict)
+        content_use= f"%{content_piece}%"
         if store_id is None:
             query = f"SELECT {select_columns} FROM book_info WHERE content like %s LIMIT %s OFFSET %s"
-            self.cur.execute(query, (content_piece, limit, offset))
+            self.cur.execute(query, (content_use, limit, offset))
         else:
             query = f"""
                 SELECT {select_columns}
                 FROM book_info
-                JOIN book_list
-                ON book_info.book_info_id = book_list.book_info_id
-                WHERE book_info.content like %s AND book_list.store_id = %s
+                WHERE content like %s AND store_id = %s
                 LIMIT %s OFFSET %s
             """
-            self.cur.execute(query, (content_piece, store_id, limit, offset))
-
+            self.cur.execute(query, (content_use, store_id, limit, offset))
         results = self.cur.fetchall()
         return [dict(zip(return_dict, row)) for row in results]
 
@@ -251,20 +244,22 @@ class SearcherInterface:
         group_columns = ", ".join(
             [f"book_tags.book_info_id"] + [f"book_info.{tp}" for tp in return_dict]
         )
-        tag_string = ",".join(["%s"] * len(tags))
+        # tag_string = ",".join(["%s"] * len(tags))
+        tag_string = ",".join([f"'{tag}'" for tag in tags])
+
 
         if store_id is None:
             sql = f"""
                 SELECT {select_columns}
-                FROM book_tags
-                JOIN book_info
+                FROM book_info
+                JOIN book_tags
                 ON book_tags.book_info_id = book_info.book_info_id
-                WHERE tag IN ({tag_string})
+                WHERE book_tags.tag IN ({tag_string})
                 GROUP BY {group_columns}
                 HAVING COUNT(DISTINCT tag) = %s
                 LIMIT %s OFFSET %s
             """
-            self.cur.execute(sql, (*tags, len(tags), limit, offset))
+            self.cur.execute(sql, (len(tags), limit, offset))
         else:
             sql = f"""
                 SELECT {select_columns}
@@ -278,7 +273,7 @@ class SearcherInterface:
                 HAVING COUNT(DISTINCT tag) = %s
                 LIMIT %s OFFSET %s
                 """
-            self.cur.execute(sql, (*tags, store_id, len(tags), limit, offset))
+            self.cur.execute(sql, (store_id, len(tags), limit, offset))
 
         results = self.cur.fetchall()
         return [dict(zip(return_dict, row)) for row in results]

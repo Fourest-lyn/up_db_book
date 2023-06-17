@@ -105,7 +105,7 @@ class StoreInterface:
         """
 
     def get_store_seller_id(self, store_id: str) -> Optional[str]:
-        self.cur.execute("SELECT userid FROM stores WHERE store_id = %s", (store_id,))
+        self.cur.execute("select user_id from stores where store_id = %s", (store_id,))
         result = self.cur.fetchone()
         # result = self.storeCol.find_one({"store_id": store_id}, {"_id": 0, "user_id": 1})
         if result is None:
@@ -121,11 +121,9 @@ class StoreInterface:
         book_dict: dict = deepcopy(new_book_info.to_dict())
         book_dict.pop("pictures",None)
         book_dict.pop("tags", None)
-        book_dict.pop("store_id",None)
         columns = ", ".join(book_dict.keys())
         values = ", ".join([f"'{value}'" for value in book_dict.values()])
         sql = f"insert into book_info ({columns}) values ({values}) returning book_info_id"
-        # print("debug insert_one_book, sql=",sql,"\n")
         self.cur.execute(sql)
 
         # get book_info_id

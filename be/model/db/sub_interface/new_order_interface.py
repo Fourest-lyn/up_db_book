@@ -89,7 +89,7 @@ class NewOrderInterface:
 
     def order_id_exist(self, order_id: str) -> bool:
         self.cur.execute(
-            "select exists(select 1 from new_order where order_id=%s",
+            "select exists(select 1 from new_order where order_id=%s)",
             (order_id,),
         )
         result = self.cur.fetchone()[0]
@@ -100,7 +100,7 @@ class NewOrderInterface:
 
     def update_new_order_status(self, order_id: str, status: STATUS) -> int:
         self.cur.execute(
-            f"update new_order set status= {status} where order_id = '{order_id}'"
+            f"update new_order set status= {status.value} where order_id = '{order_id}'"
         )
         self.conn.commit()
         # result = self.newOrderCol.update_one(
@@ -135,7 +135,7 @@ class NewOrderInterface:
         c_status = STATUS.INIT
         delta_time = current_time - expire_time
         self.cur.execute(
-            f"select order_id from new_order where status='{c_status}' and create_time >= '{delta_time}' "
+            f"select order_id from new_order where status='{c_status.value}' and create_time >= '{delta_time}' "
         )
         orders = self.cur.fetchall()
         order_id_list = [order[0] for order in orders]
@@ -143,7 +143,7 @@ class NewOrderInterface:
         # expired status:
         e_status = STATUS.CANCELED
         self.cur.execute(
-            f"UPDATE new_order SET status='{e_status}' WHERE status='{c_status}' AND create_time >= '{delta_time}'"
+            f"UPDATE new_order SET status='{e_status.value}' WHERE status='{c_status.value}' AND create_time >= '{delta_time}'"
         )
 
         self.conn.commit()

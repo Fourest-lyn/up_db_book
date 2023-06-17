@@ -55,7 +55,7 @@ class DBClient:
                 CREATE TABLE IF NOT EXISTS book_list(
                     store_id text,
                     book_id text,
-                    book_info_id text,
+                    book_info_id int,
                     stock_level int
                 )
                 """
@@ -64,6 +64,7 @@ class DBClient:
                 """
                 CREATE TABLE IF NOT EXISTS book_info (
                     book_info_id serial PRIMARY KEY,
+                    store_id text,
                     book_id text,
                     id text,
                     title text,
@@ -86,7 +87,7 @@ class DBClient:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS book_tags (
-                    book_info_id text,
+                    book_info_id int,
                     tag text
                 )
                 """
